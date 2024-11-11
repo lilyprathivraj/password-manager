@@ -1,0 +1,27 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.password-manager {
+  width: 30%;
+}
+
+.bg-container {
+  background-color: lightgray;
+  padding: 30px;
+}
+
+.form-container {
+  background-color: gray;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+.password-container {
+  background-color: gray;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+.checkBox-container {
+  text-align: right;
+}
