@@ -27,7 +27,7 @@ const PasswordItem = props => {
           </div>
         </div>
         <div>
-          <button onClick={trigerRemove} type="button">
+          <button onClick={trigerRemove} type="button" data-testid="delete">
             <img
               alt="delete"
               src="https://assets.ccbp.in/frontend/react-js/password-manager-delete-img.png"

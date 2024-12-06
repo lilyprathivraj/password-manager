@@ -3,15 +3,14 @@ import {v4 as uuidv4} from 'uuid'
 import PasswordItem from '../PasswordItem'
 import './index.css'
 
-let userList = []
-
 class PasswordManager extends Component {
   state = {
     website: '',
     username: '',
     password: '',
     visible: false,
-    userDetailsList: userList,
+    userDetailsList: [],
+    displayList: [],
   }
 
   submit = event => {
@@ -23,13 +22,13 @@ class PasswordManager extends Component {
       username,
       password,
     }
-    userList.push(newDetails)
-    this.setState({
-      userDetailsList: userList,
+    this.setState(prevState => ({
+      userDetailsList: [...prevState.userDetailsList, newDetails],
+      displayList: [...prevState.userDetailsList, newDetails],
       website: '',
       username: '',
       password: '',
-    })
+    }))
   }
 
   check = () => {
@@ -39,19 +38,22 @@ class PasswordManager extends Component {
   }
 
   remove = id => {
-    const newUserList = userList.filter(eachItem => eachItem.id !== id)
-    userList = newUserList
-    this.setState({
-      userDetailsList: newUserList,
-    })
+    this.setState(prevState => ({
+      userDetailsList: prevState.userDetailsList.filter(
+        eachItem => eachItem.id !== id,
+      ),
+      displayList: prevState.userDetailsList.filter(
+        eachItem => eachItem.id !== id,
+      ),
+    }))
   }
 
   search = event => {
-    this.setState({
-      userDetailsList: userList.filter(eachItem =>
+    this.setState(prevState => ({
+      displayList: prevState.userDetailsList.filter(eachItem =>
         eachItem.website.includes(event.target.value),
       ),
-    })
+    }))
   }
 
   website = event => {
@@ -73,8 +75,8 @@ class PasswordManager extends Component {
   }
 
   render() {
-    const {userDetailsList, website, username, password, visible} = this.state
-    const count = userDetailsList.length
+    const {displayList, website, username, password, visible} = this.state
+    const count = displayList.length
     return (
       <div className="bg-container">
         <div className="row">
@@ -155,36 +157,32 @@ class PasswordManager extends Component {
           </div>
           <hr />
           <div className="checkBox-container">
-            <input id="checkBox" type="checkBox" onClick={this.check} />
+            <input id="checkBox" type="checkBox" onChange={this.check} />
             <label htmlFor="checkBox">Show Passwords</label>
           </div>
-          <div className="row">
-            {count === 0 && (
-              <div>
+          <>
+            {count === 0 ? (
+              <>
                 <img
                   alt="no passwords"
                   src="https://assets.ccbp.in/frontend/react-js/no-passwords-img.png"
                 />
                 <p>No Passwords</p>
-              </div>
+              </>
+            ) : (
+              <ul className="row">
+                {displayList.map(eachItem => (
+                  <PasswordItem
+                    userDetails={eachItem}
+                    remove={this.remove}
+                    key={eachItem.id}
+                    visible={visible}
+                  />
+                ))}
+              </ul>
             )}
-          </div>
-          <div>
-            <ul className="row">
-              {userDetailsList.map(eachItem => (
-                <PasswordItem
-                  userDetails={eachItem}
-                  remove={this.remove}
-                  key={eachItem.id}
-                  visible={visible}
-                />
-              ))}
-            </ul>
-          </div>
+          </>
         </div>
-        <button type="button" data-testid="delete">
-          hello
-        </button>
       </div>
     )
   }
